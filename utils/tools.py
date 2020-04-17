@@ -151,7 +151,7 @@ def get_plots(stat_df,
                          label='Confidence interval of 68% ' + alg)
     plt.title(title)
     plt.xlabel('Reference string length')
-    plt.ylabel('Time, seconds')
+    plt.ylabel('Time, seconds ')
     plt.legend()
     plt.grid()
     plt.show()
