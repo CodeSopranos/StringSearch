@@ -5,7 +5,8 @@ class BruteForce(Algorithm):
     """Naive string search algorithm"""
 
     def __init__(self, reference):
-        self.reference = reference
+        self.reference     = reference
+        self.n_operations  = 0
 
     @property
     def name(self):
@@ -25,6 +26,7 @@ class BruteForce(Algorithm):
         for offset in range(len_reference - len_candidate):
             i = 0
             while self.reference[offset + i] == self.candidate[i]:
+                self.n_operations += 1
                 if (i + 1) == len_candidate:
                     offset_lst.append(offset)
                     if not multiple_search:
