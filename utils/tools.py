@@ -1,3 +1,4 @@
+import os
 import random
 import numpy as np
 import pandas as pd
@@ -69,6 +70,60 @@ def generate_stat(algorithms,
                 info_dct['observation']   += [observation]
                 info_dct['indexes']       += [str(indexes)]
 
+    return pd.DataFrame.from_dict(info_dct)
+
+def generate_stat_for_benchmarks(algorithms,
+                  set_params,
+                  files_w,
+                  files_t,
+                  path_to_benchmarks,
+                  **params):
+
+    assert len(files_w) == len(files_t)
+    
+    numb_of_files = len(files_w)
+    
+    for algorithm in algorithms:
+        assert isinstance(algorithm(''), Algorithm)
+
+    info_dct = {
+                     'algorithm':     [],
+                     'reference_len': [],
+                     'candidate_len': [],
+                     'preprocessing': [],
+                     'execution':     [],
+     #                'observation':   [],
+                     'indexes':       []
+                   }
+
+    for i in range(numb_of_files):
+        with open(path_to_benchmarks + files_t[i], 'r', encoding='utf-8') as file_t:
+            file_t = file_t.read()
+        
+        with open(path_to_benchmarks + files_w[i], 'r', encoding='utf-8') as file_w:
+            file_w = file_w.read()
+
+        reference = file_t
+        candidate = file_w
+
+        for algorithm, params in zip(algorithms, set_params):
+
+            start_time = datetime.now()
+            alg = algorithm(reference)
+            alg.set_candidate(candidate, **params)
+            preprocess = datetime.now() - start_time
+
+            start_time = datetime.now()
+            indexes = alg.search(multiple_search=True)
+            execution = datetime.now() - start_time
+
+            info_dct['algorithm']     += [alg.name]
+            info_dct['reference_len'] += [len(reference)]
+            info_dct['candidate_len'] += [len(candidate)]
+            info_dct['preprocessing'] += [preprocess.total_seconds()]
+            info_dct['execution']     += [execution.total_seconds()]
+           # info_dct['observation']   += [observation]
+            info_dct['indexes']       += [str(indexes)]
     return pd.DataFrame.from_dict(info_dct)
 
 
