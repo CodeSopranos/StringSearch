@@ -1,11 +1,12 @@
 from collections import defaultdict
 from algorithm.base import Algorithm
+from string import ascii_letters
+
 
 class BoyerMooreHorspool(Algorithm):
 
     def __init__(self, reference):
-        spec_characters = '\tEmCGH7'
-        reference = reference.translate(reference.maketrans('', '', spec_characters))
+ #       reference = reference.translate(reference.maketrans('', '', ascii_letters))
         self.reference = reference
 
     @property
