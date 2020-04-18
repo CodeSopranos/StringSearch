@@ -8,6 +8,8 @@ class BoyerMooreHorspool(Algorithm):
     def __init__(self, reference):
  #       reference = reference.translate(reference.maketrans('', '', ascii_letters))
         self.reference = reference
+        self.n_operations = 0
+
 
     @property
     def name(self):
@@ -17,30 +19,33 @@ class BoyerMooreHorspool(Algorithm):
         self.candidate = candidate
 
     def set_skip_table(self):
-        len_reference = len(self.reference)
-        len_candidate = len(self.candidate)
-        if len_candidate > len_reference:
-            print("Error: len candidate > len references {} > {}.".format(len_candidate, len_reference))
+        len_ref = len(self.reference)
+        len_can = len(self.candidate)
+        if len_can > len_ref:
+            print("Error: len candidate > len references {} > {}." \
+                              .format(len_can, len_ref))
             return -1
 
-        self.table_skip = defaultdict(lambda: len_candidate) 
+        self.table_skip = defaultdict(lambda: len_can)
 
-        for offset in range(len_candidate - 1):
-            self.table_skip[ord(self.candidate[offset])] = len_candidate - offset - 1
-        
+        for offset in range(len_can - 1):
+            self.table_skip[ord(self.candidate[offset])] = len_can - offset - 1
+
     def search(self, multiple_search=False) -> list:
         self.set_skip_table()
 
-        len_reference = len(self.reference)
-        len_candidate = len(self.candidate)
+        len_ref = len(self.reference)
+        len_can = len(self.candidate)
 
         offset_lst = []
-        offset = len_candidate - 1
+        offset = len_can - 1
 
-        while offset < len_reference:
-            j = len_candidate - 1
+        while offset < len_ref:
+            j = len_can - 1
             i = offset
+            self.n_operations += 1
             while j >= 0 and self.reference[i] == self.candidate[j]:
+                self.n_operations += 1
                 j -= 1
                 i -= 1
             if j == -1:

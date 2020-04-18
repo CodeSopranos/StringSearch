@@ -26,6 +26,7 @@ def generate_stat(algorithms,
                   gen_string,
                   dictionary, reference_len, candidate_len,
                   n_observations,
+                  multiple_search=True,
                   **params):
 
     # sanity checks
@@ -41,6 +42,7 @@ def generate_stat(algorithms,
                      'preprocessing': [],
                      'execution':     [],
                      'observation':   [],
+                     'n_operations':  [],
                      'indexes':       []
                    }
 
@@ -59,7 +61,7 @@ def generate_stat(algorithms,
                 preprocess = datetime.now() - start_time
 
                 start_time = datetime.now()
-                indexes = alg.search(multiple_search=True)
+                indexes = alg.search(multiple_search=multiple_search)
                 execution = datetime.now() - start_time
 
                 info_dct['algorithm']     += [alg.name]
@@ -68,6 +70,7 @@ def generate_stat(algorithms,
                 info_dct['preprocessing'] += [preprocess.total_seconds()]
                 info_dct['execution']     += [execution.total_seconds()]
                 info_dct['observation']   += [observation]
+                info_dct['n_operations']  += [alg.n_operations]
                 info_dct['indexes']       += [str(indexes)]
 
     return pd.DataFrame.from_dict(info_dct)
@@ -79,6 +82,7 @@ def generate_stat_for_benchmarks(algorithms,
                                   files_t,
                                   path_to_benchmarks,
                                   n_observations=1,
+                                  multiple_search=True,
                                   **params):
 
     assert len(files_w) == len(files_t)
@@ -94,6 +98,7 @@ def generate_stat_for_benchmarks(algorithms,
                      'preprocessing': [],
                      'execution':     [],
                      'observation':   [],
+                     'n_operations':  [],
                      'indexes':       []
                    }
     for observation in range(n_observations):
@@ -117,7 +122,7 @@ def generate_stat_for_benchmarks(algorithms,
                 preprocess = datetime.now() - start_time
 
                 start_time = datetime.now()
-                indexes    = alg.search(multiple_search=True)
+                indexes    = alg.search(multiple_search=multiple_search)
                 execution  = datetime.now() - start_time
 
                 info_dct['algorithm']     += [alg.name]
@@ -127,6 +132,7 @@ def generate_stat_for_benchmarks(algorithms,
                 info_dct['preprocessing'] += [preprocess.total_seconds()]
                 info_dct['execution']     += [execution.total_seconds()]
                 info_dct['observation']   += [observation]
+                info_dct['n_operations']  += [alg.n_operations]
                 info_dct['indexes']       += [str(indexes)]
     return pd.DataFrame.from_dict(info_dct)
 
@@ -148,7 +154,7 @@ def get_plots(stat_df,
                          oy - 2 * oy_std,
                          oy + 2 * oy_std,
                          color=p[0].get_color(), alpha=0.3,
-                         label='Confidence interval of 68% ' + alg)
+                         label='Confidence interval of 68% '+alg)
     plt.title(title)
     plt.xlabel('Reference string length')
     plt.ylabel('Time, seconds ')

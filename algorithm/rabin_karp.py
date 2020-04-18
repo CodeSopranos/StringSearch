@@ -7,8 +7,10 @@ class RabinKarp(Algorithm):
 
     def __init__(self, reference, hash_function=hash):
         self.reference     = reference
+        self.n_operations = 0
         self.hash_function = hash_function
         self.n_operations  = 0
+
 
     @property
     def name(self):
@@ -41,23 +43,26 @@ class RabinKarp(Algorithm):
 
         for i in range(len_ref-len_can+1):
 
+           self.n_operations += 1
+
            if self.c == self.r:
                match = True
                for j in range(len_can):
+                   self.n_operations += 1
                    if self.candidate[j] != self.reference[i+j]:
                        match = False
                        break
                if match:
                    offset_lst.append(i)
                    if not multiple_search:
-                       return offset
+                       return [i]
 
            if i < len_ref - len_can:
                self.r =  (self.r - self.h * ord(self.reference[i]))
                self.r %= self.q
                self.r =  (self.r * self.d + ord(self.reference[i+len_can]))
                self.r %= self.q
-               self.r =  (self.r + self.q) % self.q
+               # self.r =  (self.r + self.q) % self.q
 
         return offset_lst
 
@@ -72,6 +77,7 @@ class RabinKarp(Algorithm):
         for offset in range(int(np.ceil(len_ref / len_can))):
             reference_hash = hash(self.reference[offset:(offset + len_can)])
             if reference_hash == candidate_hash:
+                self.n_operations += 1
                 i = 0
                 while self.reference[offset + i] == self.candidate[i]:
                     self.n_operations += 1
