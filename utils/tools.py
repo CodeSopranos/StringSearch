@@ -41,6 +41,7 @@ def generate_stat(algorithms,
                      'preprocessing': [],
                      'execution':     [],
                      'observation':   [],
+                     'n_operations':  [],
                      'indexes':       []
                    }
 
@@ -68,6 +69,7 @@ def generate_stat(algorithms,
                 info_dct['preprocessing'] += [preprocess.total_seconds()]
                 info_dct['execution']     += [execution.total_seconds()]
                 info_dct['observation']   += [observation]
+                info_dct['n_operations']  += [alg.get_n_operations()]
                 info_dct['indexes']       += [str(indexes)]
 
     return pd.DataFrame.from_dict(info_dct)
@@ -94,6 +96,7 @@ def generate_stat_for_benchmarks(algorithms,
                      'preprocessing': [],
                      'execution':     [],
                      'observation':   [],
+                     'n_operations':  [],
                      'indexes':       []
                    }
     for observation in range(n_observations):
@@ -127,6 +130,7 @@ def generate_stat_for_benchmarks(algorithms,
                 info_dct['preprocessing'] += [preprocess.total_seconds()]
                 info_dct['execution']     += [execution.total_seconds()]
                 info_dct['observation']   += [observation]
+                info_dct['n_operations']  += [alg.get_n_operations()]
                 info_dct['indexes']       += [str(indexes)]
     return pd.DataFrame.from_dict(info_dct)
 

@@ -6,9 +6,13 @@ from string import ascii_letters
 class BoyerMooreHorspool(Algorithm):
 
     def __init__(self, reference):
+        self.n_operations = 0
  #       reference = reference.translate(reference.maketrans('', '', ascii_letters))
         self.reference = reference
 
+    def get_n_operations(self):
+        return self.n_operations
+    
     @property
     def name(self):
         return 'Boyer-Moore-Horspool'
@@ -41,6 +45,7 @@ class BoyerMooreHorspool(Algorithm):
             j = len_candidate - 1
             i = offset
             while j >= 0 and self.reference[i] == self.candidate[j]:
+                self.n_operations += 1
                 j -= 1
                 i -= 1
             if j == -1:
