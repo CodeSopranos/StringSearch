@@ -8,7 +8,11 @@ class KnuthMorrisPratt(Algorithm):
     def __init__(self, reference):
         # reference = reference.translate(reference.maketrans('', '', ascii_letters))
         self.reference = reference
+        self.n_operations = 0
 
+    def get_n_operations(self):
+        return self.n_operations
+        
     @property
     def name(self):
         return 'Knuth-Morris-Pratt'
@@ -36,6 +40,7 @@ class KnuthMorrisPratt(Algorithm):
         i = 0  # index for txt[]
         while i < len_reference:
             if self.candidate[j] == self.reference[i]:
+                self.n_operations += 1
                 i += 1
                 j += 1
 
@@ -46,6 +51,7 @@ class KnuthMorrisPratt(Algorithm):
                     return offset_lst
             # mismatch after j matches
             elif i < len_reference and self.candidate[j] != self.reference[i]:
+                self.n_operations += 1
                 # Do not match lps[0..lps[j-1]] characters,
                 # they will match anyway
                 if j != 0:
@@ -65,6 +71,7 @@ class KnuthMorrisPratt(Algorithm):
         # the loop calculates lps[i] for i = 1 to M-1
         while i < len_candidate:
             if self.candidate[i] == self.candidate[length]:
+                self.n_operations += 1
                 length += 1
                 self.lps[i] = length
                 i += 1
